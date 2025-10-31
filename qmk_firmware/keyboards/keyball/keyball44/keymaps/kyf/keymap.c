@@ -78,7 +78,7 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
         mouse_report.y = 0;
 
         // Threshold for detecting meaningful horizontal movement
-        const int8_t threshold = 10;
+        const int8_t threshold = 40;
         // Threshold for detecting near-stop (lower value)
         const int8_t stop_threshold = 3;
 
