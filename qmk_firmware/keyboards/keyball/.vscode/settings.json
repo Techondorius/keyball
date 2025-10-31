@@ -1,0 +1,12 @@
+{
+  "files.associations": {
+    "*.html": "html",
+    "*.json": "jsonc",
+    "*.smarty": "smarty",
+    "*.vue": "vue",
+    "*.twig": "jinja",
+    ".prettierrc": "jsonc",
+    "*.tsx": "typescriptreact",
+    "oledkit.h": "c"
+  }
+}
