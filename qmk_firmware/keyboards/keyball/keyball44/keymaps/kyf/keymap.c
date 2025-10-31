@@ -60,6 +60,13 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 #ifdef POINTING_DEVICE_ENABLE
+// Track the last direction for preventing continuous input
+static enum {
+    DIR_NONE = 0,
+    DIR_LEFT = -1,
+    DIR_RIGHT = 1
+} last_direction = DIR_NONE;
+
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
     // Check if layer 2 is active
     if (get_highest_layer(layer_state) == 2) {
@@ -72,19 +79,43 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 
         // Threshold for detecting meaningful horizontal movement
         const int8_t threshold = 10;
+        // Threshold for detecting near-stop (lower value)
+        const int8_t stop_threshold = 3;
 
-        // If significant horizontal movement detected
-        if (x_movement > threshold) {
-            // Right movement -> Ctrl+Right Arrow
-            register_code(KC_LCTL);
-            tap_code(KC_RGHT);
-            unregister_code(KC_LCTL);
-        } else if (x_movement < -threshold) {
-            // Left movement -> Ctrl+Left Arrow
-            register_code(KC_LCTL);
-            tap_code(KC_LEFT);
-            unregister_code(KC_LCTL);
+        // Detect if movement stopped or reversed direction
+        bool movement_stopped = (x_movement > -stop_threshold && x_movement < stop_threshold);
+        bool direction_reversed = false;
+
+        if (last_direction == DIR_RIGHT && x_movement < -threshold) {
+            direction_reversed = true;
+        } else if (last_direction == DIR_LEFT && x_movement > threshold) {
+            direction_reversed = true;
         }
+
+        // Reset state if movement stopped or reversed
+        if (movement_stopped || direction_reversed) {
+            last_direction = DIR_NONE;
+        }
+
+        // Only send key if no previous direction is locked
+        if (last_direction == DIR_NONE) {
+            if (x_movement > threshold) {
+                // Right movement -> Ctrl+Right Arrow
+                register_code(KC_LCTL);
+                tap_code(KC_RGHT);
+                unregister_code(KC_LCTL);
+                last_direction = DIR_RIGHT;
+            } else if (x_movement < -threshold) {
+                // Left movement -> Ctrl+Left Arrow
+                register_code(KC_LCTL);
+                tap_code(KC_LEFT);
+                unregister_code(KC_LCTL);
+                last_direction = DIR_LEFT;
+            }
+        }
+    } else {
+        // Reset direction when not on layer 2
+        last_direction = DIR_NONE;
     }
 
     return mouse_report;
