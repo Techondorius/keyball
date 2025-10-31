@@ -59,47 +59,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-#ifdef POINTING_DEVICE_ENABLE
-// Track the previous frame's x_movement
-static int8_t prev_x_movement = 0;
-
-report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    // Check if layer 2 is active
-    if (get_highest_layer(layer_state) == 2) {
-        // Store horizontal movement
-        int8_t x_movement = mouse_report.x;
-
-        // Clear mouse movement to prevent cursor from moving
-        mouse_report.x = 0;
-        mouse_report.y = 0;
-
-        // Threshold for detecting meaningful horizontal movement
-        const int8_t threshold = 40;
-
-        // Send key only when transitioning from below threshold to above threshold
-        if (prev_x_movement < threshold && x_movement >= threshold) {
-            // Right movement -> Ctrl+Right Arrow
-            register_code(KC_LCTL);
-            tap_code(KC_RGHT);
-            unregister_code(KC_LCTL);
-        } else if (prev_x_movement > -threshold && x_movement <= -threshold) {
-            // Left movement -> Ctrl+Left Arrow
-            register_code(KC_LCTL);
-            tap_code(KC_LEFT);
-            unregister_code(KC_LCTL);
-        }
-
-        // Store current movement for next frame
-        prev_x_movement = x_movement;
-    } else {
-        // Reset state when not on layer 2
-        prev_x_movement = 0;
-    }
-
-    return mouse_report;
-}
-#endif
-
 #ifdef OLED_ENABLE
 
 #    include "lib/oledkit/oledkit.h"
