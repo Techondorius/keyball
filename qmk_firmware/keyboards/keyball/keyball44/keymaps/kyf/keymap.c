@@ -20,6 +20,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 
+// Combo definitions
+enum combo_events {
+    SPACE_J_CLICK,
+};
+
+const uint16_t PROGMEM space_j_combo[] = {LT(1,KC_SPC), KC_J, COMBO_END};
+
+combo_t key_combos[] = {
+    [SPACE_J_CLICK] = COMBO_ACTION(space_j_combo),
+};
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    switch(combo_index) {
+        case SPACE_J_CLICK:
+            if (pressed) {
+                tap_code(KC_BTN1);
+            }
+            break;
+    }
+}
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // keymap for default (VIA)
