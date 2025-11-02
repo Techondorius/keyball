@@ -80,10 +80,27 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
     uint8_t layer = get_highest_layer(state);
 
-    // Layer 2: Light up only O key LED in red
     if (layer == 2) {
+        // すべてのLEDを消す
         rgblight_disable_noeeprom();
-      } else {
+
+        // OキーのLED番号を指定（例: LED番号10の場合）
+        // ※実際のLED番号は後述の方法で確認してください
+        uint8_t o_key_led = 10;
+
+        // 個別のLEDを赤色に設定
+        rgblight_enable_noeeprom();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+        rgblight_sethsv_range_noeeprom(0, 255, 255, o_key_led, o_key_led + 1);
+
+        // 他のLEDを消す（全体を暗くしてから、Oキーだけ点灯）
+        for (uint8_t i = 0; i < RGBLIGHT_LED_COUNT; i++) {
+            if (i != o_key_led) {
+                rgblight_sethsv_range_noeeprom(0, 0, 0, i, i + 1);
+            }
+        }
+    } else {
+        // 他のレイヤーでは通常通り
         rgblight_enable_noeeprom();
     }
 
