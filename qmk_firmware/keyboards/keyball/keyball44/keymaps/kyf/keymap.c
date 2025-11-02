@@ -94,7 +94,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         rgblight_sethsv_range_noeeprom(0, 255, 255, o_key_led, o_key_led + 1);
 
         // 他のLEDを消す（全体を暗くしてから、Oキーだけ点灯）
-        for (uint8_t i = 0; i < RGBLIGHT_LED_COUNT; i++) {
+        for (uint8_t i = 0; i < RGBLED_NUM; i++) {
             if (i != o_key_led) {
                 rgblight_sethsv_range_noeeprom(0, 0, 0, i, i + 1);
             }
