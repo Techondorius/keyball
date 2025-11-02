@@ -77,6 +77,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 layer_state_t layer_state_set_user(layer_state_t state) {
     // Auto enable scroll mode when the highest layer is 3
     keyball_set_scroll_mode(get_highest_layer(state) == 3);
+
+    // Light up specific LED in red when layer 2 is active
+    uint8_t layer = get_highest_layer(state);
+    if (layer == 2) {
+        // Turn off all LEDs first
+        rgblight_setrgb_at(0, 0, 0, 0);
+        // Set LED 0 to red (adjust the LED index as needed)
+        rgblight_setrgb_at(255, 0, 0, 0);
+    } else {
+        // Restore normal RGB mode when not on layer 2
+        rgblight_setrgb_at(0, 0, 0, 0);
+    }
+
     return state;
 }
 
