@@ -96,7 +96,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         // Keyball44 LED index: right side starts at 30
         // O key is at position [0][9] in the matrix (right hand col 3)
         // Estimated LED index: 33 (may need adjustment based on actual LED layout)
-        rgblight_setrgb_at(255, 0, 0, 33);
+        // rgblight_setrgb_at(255, 0, 0, 33);
     } else {
         // Restore normal RGB lighting for other layers
         rgblight_reload_from_eeprom();
