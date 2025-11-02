@@ -82,24 +82,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
     // Layer 2: Light up only O key LED in red
     if (layer == 2) {
-        // Turn off all LEDs
         rgblight_disable_noeeprom();
+      } else {
         rgblight_enable_noeeprom();
-        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-
-        // Set all LEDs to off (black)
-        for (uint8_t i = 0; i < RGBLED_NUM; i++) {
-            rgblight_setrgb_at(0, 0, 0, i);
-        }
-
-        // Light up O key LED (right hand, row 0, col 3)
-        // Keyball44 LED index: right side starts at 30
-        // O key is at position [0][9] in the matrix (right hand col 3)
-        // Estimated LED index: 33 (may need adjustment based on actual LED layout)
-        // rgblight_setrgb_at(255, 0, 0, 33);
-    } else {
-        // Restore normal RGB lighting for other layers
-        rgblight_reload_from_eeprom();
     }
 
     return state;
