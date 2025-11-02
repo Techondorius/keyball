@@ -91,7 +91,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         // 個別のLEDを赤色に設定
         rgblight_enable_noeeprom();
         rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-        rgblight_sethsv_range_noeeprom(0, 255, 255, o_key_led, o_key_led + 1);
+        rgblight_sethsv_noeeprom(0, 255, 255, o_key_led);
 
         // 他のLEDを消す（全体を暗くしてから、Oキーだけ点灯）
         for (uint8_t i = 0; i < RGBLED_NUM; i++) {
