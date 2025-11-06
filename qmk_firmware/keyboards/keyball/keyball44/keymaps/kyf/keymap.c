@@ -82,6 +82,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     uint8_t layer = get_highest_layer(state);
     if (layer == 2) {
         rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
 
         // Set all LEDs to blue first
         for (uint8_t i = 0; i < RGBLED_NUM; i++) {
@@ -95,6 +96,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         for (uint8_t i = 0; i < 4; i++) {
             rgblight_setrgb_at(255, 0, 0, red_keys[i]);  // Red color
         }
+
+        // Force update to sync both sides of split keyboard
+        rgblight_set();
     } else {
         // Restore normal RGB mode when not on layer 2
         rgblight_enable();
