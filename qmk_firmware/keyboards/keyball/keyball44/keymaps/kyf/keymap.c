@@ -78,17 +78,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     // Auto enable scroll mode when the highest layer is 3
     keyball_set_scroll_mode(get_highest_layer(state) == 3);
 
-    return state;
-}
-
-// RGB Matrix custom layer indicator
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    uint8_t layer = get_highest_layer(layer_state);
-
+    // Light up specific LEDs in red when layer 2 is active
+    uint8_t layer = get_highest_layer(state);
     if (layer == 2) {
+        rgblight_enable();
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+
         // Set all LEDs to blue first
-        for (uint8_t i = led_min; i < led_max; i++) {
-            rgb_matrix_set_color(i, 0, 50, 150);  // Blue color
+        for (uint8_t i = 0; i < RGBLED_NUM; i++) {
+            rgblight_setrgb_at(0, 50, 150, i);  // Blue color
         }
 
         // Set O, K, L, ; keys to red
@@ -96,13 +94,17 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         // These values may need adjustment after testing
         uint8_t red_keys[] = {33, 38, 39, 40};  // O, K, L, SCLN
         for (uint8_t i = 0; i < 4; i++) {
-            if (red_keys[i] >= led_min && red_keys[i] < led_max) {
-                rgb_matrix_set_color(red_keys[i], 255, 0, 0);  // Red color
-            }
+            rgblight_setrgb_at(255, 0, 0, red_keys[i]);  // Red color
         }
+
+        // Force update to sync both sides of split keyboard
+        rgblight_set();
+    } else {
+        // Restore normal RGB mode when not on layer 2
+        rgblight_enable();
     }
 
-    return false;
+    return state;
 }
 
 #ifdef OLED_ENABLE
