@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#    define RGBLIGHT_EFFECT_ALTERNATING
 //#    define RGBLIGHT_EFFECT_TWINKLE
 #    define RGBLIGHT_LAYERS
-#    define RGBLIGHT_MAX_LAYERS 8
+#    define RGBLIGHT_MAX_LAYERS 2
 #endif
 
 #define TAP_CODE_DELAY 5
