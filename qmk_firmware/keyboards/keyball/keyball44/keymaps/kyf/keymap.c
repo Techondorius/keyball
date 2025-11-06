@@ -78,13 +78,23 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     // Auto enable scroll mode when the highest layer is 3
     keyball_set_scroll_mode(get_highest_layer(state) == 3);
 
-    // Light up specific LED in red when layer 2 is active
+    // Light up specific LEDs in red when layer 2 is active
     uint8_t layer = get_highest_layer(state);
     if (layer == 2) {
-        // Turn off all LEDs
-        rgblight_disable();
-        // Set only LED 0 to red
-        rgblight_setrgb_at(255, 0, 0, 0);
+        rgblight_enable();
+
+        // Set all LEDs to blue first
+        for (uint8_t i = 0; i < RGBLED_NUM; i++) {
+            rgblight_setrgb_at(0, 50, 150, i);  // Blue color
+        }
+
+        // Set O, K, L, ; keys to red
+        // LED indices for O, K, L, SCLN (estimated based on typical wiring)
+        // These values may need adjustment after testing
+        uint8_t red_keys[] = {33, 38, 39, 40};  // O, K, L, SCLN
+        for (uint8_t i = 0; i < 4; i++) {
+            rgblight_setrgb_at(255, 0, 0, red_keys[i]);  // Red color
+        }
     } else {
         // Restore normal RGB mode when not on layer 2
         rgblight_enable();
