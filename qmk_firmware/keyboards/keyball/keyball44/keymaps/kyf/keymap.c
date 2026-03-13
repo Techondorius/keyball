@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  // keymap for default
+  // keymap for default (VIA)
   [0] = LAYOUT_universal(
     KC_ESC   , KC_Q     , KC_W     , KC_E     , KC_R     , KC_T     ,                                        KC_Y     , KC_U     , KC_I     , KC_O     , KC_P     , KC_DEL   ,
     KC_TAB   , KC_A     , KC_S     , KC_D     , KC_F     , KC_G     ,                                        KC_H     , KC_J     , KC_K     , KC_L     , KC_SCLN  , S(KC_7)  ,
@@ -53,9 +53,37 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
+// Define RGB Lighting Layers
+const rgblight_segment_t PROGMEM layer2_all[] = RGBLIGHT_LAYER_SEGMENTS(
+    {0, 60, HSV_BLUE}  // All LEDs to blue
+);
+
+const rgblight_segment_t PROGMEM layer2_highlight[] = RGBLIGHT_LAYER_SEGMENTS(
+    // LED indices for O, K, L, SCLN (estimated based on typical wiring)
+    // These values may need adjustment after testing
+    {33, 1, HSV_RED},  // O key
+    {38, 1, HSV_RED},  // K key
+    {39, 1, HSV_RED},  // L key
+    {40, 1, HSV_RED}   // ; key
+);
+
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+    layer2_all,
+    layer2_highlight
+);
+
+void keyboard_post_init_user(void) {
+    rgblight_layers = my_rgb_layers;
+}
+
 layer_state_t layer_state_set_user(layer_state_t state) {
     // Auto enable scroll mode when the highest layer is 3
     keyball_set_scroll_mode(get_highest_layer(state) == 3);
+
+    // Enable RGB layers when layer 2 is active
+    rgblight_set_layer_state(0, layer_state_cmp(state, 2));
+    rgblight_set_layer_state(1, layer_state_cmp(state, 2));
+
     return state;
 }
 
